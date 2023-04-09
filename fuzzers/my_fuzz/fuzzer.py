@@ -24,7 +24,7 @@ from fuzzers import utils
 def prepare_build_environment():
     """Set environment variables used to build targets for AFL-based
     fuzzers."""
-    cflags = ['-fPIC', '-fsanitize-coverage=trace-pc-guard']
+    cflags = ['-fPIC']
     utils.append_flags('CFLAGS', cflags)
     utils.append_flags('CXXFLAGS', cflags)
 
@@ -86,12 +86,7 @@ def prepare_fuzz_environment(input_corpus):
     subprocess.check_call(['pip3', 'install', '-r', '/out/rw/requirements.txt', '-i', 'https://pypi.tuna.tsinghua.edu.cn/simple'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
     # Install llvm
-    try:
-        res = subprocess.check_call(['apt-get', 'install', '-y', 'llvm'])
-        print(res)
-    except subprocess.CalledProcessError as exc:
-        print('returncode:', exc.returncode)
-    # subprocess.check_call(['apt-get', 'install', 'llvm'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    subprocess.check_call(['apt-get', 'install', '-y', 'llvm'], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 def check_skip_det_compatible(additional_flags):
     """ Checks if additional flags are compatible with '-d' option"""
@@ -116,19 +111,8 @@ def afl_instrumentation_by_rw(target_binary):
         '--ignore-no-pie'
     ]
 
-    try:
-        res = subprocess.check_call(command)
-        print(res)
-    except subprocess.CalledProcessError as exc:
-        print('returncode:', exc.returncode)
-        print('cmd:', exc.cmd)
-        print('output:', exc.output)
-
-    try:
-        res = subprocess.check_call(['llvm-mc', target_binary_afl_dis, '-o', target_binary_afl])
-        print(res)
-    except subprocess.CalledProcessError as exc:
-        print('returncode:', exc.returncode)
+    subprocess.check_call(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    subprocess.check_call(['llvm-mc', target_binary_afl_dis, '-o', target_binary_afl], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
 
 def run_afl_fuzz(input_corpus,
