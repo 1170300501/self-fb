@@ -51,7 +51,7 @@ SANITIZER_FLAGS = [
 # libraries.
 NO_SANITIZER_COMPAT_CFLAGS = [
     '-pthread', '-Wl,--no-as-needed', '-Wl,-ldl', '-Wl,-lm',
-    '-Wno-unused-command-line-argument', '--std=gnu99'
+    '-Wno-unused-command-line-argument'
 ]
 
 FUZZING_CFLAGS = ['-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION']
